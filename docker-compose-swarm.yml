@@ -1,0 +1,37 @@
+version: "3.7"
+
+services:
+  map-generator:
+    image: map-tools
+    networks:
+      hostnet: {}
+    deploy:
+      mode: global
+      restart_policy:
+        condition: none
+      placement:
+        constraints:
+          - node.labels.generator == true
+    environment:
+      BBOX: ${BBOX}
+      MIN_ZOOM: ${MIN_ZOOM}
+      MAX_ZOOM: ${MAX_ZOOM}
+      OSM_MAX_TIMESTAMP: "2020-02-01T00:00:00Z"
+      OSM_AREA_NAME: ${OSM_AREA_NAME}
+      PREBUILD: ${PREBUILD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      QUICKSTART_MIN_ZOOM: ${QUICKSTART_MIN_ZOOM}
+      QUICKSTART_MAX_ZOOM: ${QUICKSTART_MAX_ZOOM}
+      DIFF_MODE: ${DIFF_MODE}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /private/var/app/openmaptiles:/app
+
+networks:
+  hostnet:
+    external: true
+    name: host
